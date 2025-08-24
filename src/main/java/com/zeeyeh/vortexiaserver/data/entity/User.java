@@ -13,7 +13,7 @@ import lombok.EqualsAndHashCode;
 @TableName("user")
 public class User extends BaseEntity {
     @TableId(type = IdType.AUTO)
-    private long id;
+    private Long id;
     private String username;
     private String nickname;
     private String password;

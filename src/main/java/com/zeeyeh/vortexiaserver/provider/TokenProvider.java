@@ -18,11 +18,11 @@ import java.util.Map;
 public class TokenProvider {
 
     // 过期时间（秒）
-    @Value("${nyt.auth.token.expiration}")
+    @Value("${vta.auth.token.expiration}")
     private long EXPIRE_TIME;
 
     // 密钥
-    @Value("${nyt.auth.token.secret}")
+    @Value("${vta.auth.token.secret}")
     private String SECRET;
 
     /**

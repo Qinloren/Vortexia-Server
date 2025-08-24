@@ -11,7 +11,7 @@ import java.io.Serializable;
 public class BaseEntity implements Serializable {
 
     @Schema(description = "更新时间", example = "1755947949")
-    private long updateTime;
+    private Long updateTime;
     @Schema(description = "创建时间", example = "1755947949")
-    private long createTime;
+    private Long createTime;
 }

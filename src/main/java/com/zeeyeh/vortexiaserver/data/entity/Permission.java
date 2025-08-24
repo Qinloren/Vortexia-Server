@@ -11,7 +11,7 @@ import lombok.Data;
 public class Permission {
     @TableId(type = IdType.AUTO)
     @Schema(description = "权限Id", example = "1", requiredMode = Schema.RequiredMode.REQUIRED)
-    private long id;
+    private Long id;
 
     @Schema(description = "权限名称", example = "user:create", requiredMode = Schema.RequiredMode.REQUIRED)
     private String name;
