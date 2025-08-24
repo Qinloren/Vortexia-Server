@@ -12,12 +12,12 @@ import com.zeeyeh.vortexiaserver.data.vo.UserSearchVo;
 import com.zeeyeh.vortexiaserver.data.vo.UserVo;
 import com.zeeyeh.vortexiaserver.exception.HttpRequestException;
 import com.zeeyeh.vortexiaserver.mapper.UserMapper;
+import com.zeeyeh.vortexiaserver.provider.PasswordEncoder;
 import com.zeeyeh.vortexiaserver.provider.RedisProvider;
 import com.zeeyeh.vortexiaserver.provider.TokenProvider;
 import com.zeeyeh.vortexiaserver.service.UserService;
 import jakarta.annotation.Resource;
 import org.springframework.beans.BeanUtils;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 

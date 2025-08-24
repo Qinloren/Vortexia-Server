@@ -1,4 +1,7 @@
 spring:
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
   application:
     name: Vortexia-Server
   data:
@@ -19,16 +22,6 @@ spring:
     username: vortexia
     password: vortexia
 
-
-knife4j:
-  enable: true
-  setting:
-    language: zh_cn
-#    swagger-model-name: 实体列表
-
-springdoc:
-  api-docs:
-    path: /docs/api
 logging:
   level:
     org.springframework.security: DEBUG
