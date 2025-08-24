@@ -11,13 +11,11 @@ public class UserSearchVo {
     private Long total;
     private Integer number;
     private Integer size;
-    private Integer pages;
 
     public UserSearchVo(List<UserVo> content, Long total, Integer number, Integer size) {
         this.content = content;
         this.total = total;
         this.number = number;
         this.size = size;
-        this.pages = (int) Math.ceil((double) total / size);
     }
 }

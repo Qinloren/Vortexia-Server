@@ -6,10 +6,9 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-@EqualsAndHashCode(callSuper = true)
 @Data
 @TableName("role_permission")
-public class RolePermission extends BaseEntity {
+public class RolePermission {
     @TableId(type = IdType.AUTO)
     private Long id;
     private Long roleId;

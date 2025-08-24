@@ -19,7 +19,7 @@ public class User extends BaseEntity {
     private String email;
     private String avatar;
     private UserStatus status;
-    private Role role;
+    private Long roleId;
     @TableLogic
     private Integer isDeleted;
 }

@@ -7,6 +7,13 @@ import com.zeeyeh.vortexiaserver.data.vo.UserVo;
 
 
 public interface UserService {
+
+    /**
+     * 注册用户
+     * @param registerDto 注册信息
+     * @return 用户信息
+     */
+    UserVo register(UserRegisterDto registerDto);
     /**
      * 创建用户
      * @param userCreateDto 用户创建信息

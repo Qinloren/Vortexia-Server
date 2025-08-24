@@ -15,32 +15,37 @@ public class UserController {
     @Resource
     UserService userService;
 
-    @PostMapping("/create")
+    @PostMapping("register")
+    @ResponseBody
+    public UserVo register(@RequestBody UserRegisterDto registerDto) {
+        return userService.register(registerDto);
+    }
+
+    @PostMapping("create")
     @ResponseBody
     public UserVo create(@RequestBody UserCreateDto createDto) {
         return userService.create(createDto);
     }
 
-    @PostMapping("/login")
+    @PostMapping("login")
     @ResponseBody
     public Result<UserVo> login(@RequestBody UserLoginDto loginDto) {
         return userService.login(loginDto);
     }
 
-
-    @GetMapping("/search")
+    @GetMapping("search")
     @ResponseBody
     public UserSearchVo search(@RequestBody UserSearchDto searchDto) {
         return userService.search(searchDto);
     }
 
-    @PostMapping("/update")
+    @PostMapping("update")
     @ResponseBody
     public UserVo update(@RequestBody UserUpdateDto updateDto) {
         return userService.update(updateDto);
     }
 
-    @PostMapping("/delete")
+    @PostMapping("delete")
     @ResponseBody
     public void delete(@RequestBody UserDeleteDto deleteDto) {
         userService.delete(deleteDto);

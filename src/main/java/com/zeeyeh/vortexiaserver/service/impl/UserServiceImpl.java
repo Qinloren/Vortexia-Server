@@ -16,17 +16,21 @@ import com.zeeyeh.vortexiaserver.provider.PasswordEncoder;
 import com.zeeyeh.vortexiaserver.provider.RedisProvider;
 import com.zeeyeh.vortexiaserver.provider.TokenProvider;
 import com.zeeyeh.vortexiaserver.service.UserService;
+import com.zeeyeh.vortexiaserver.utils.BeanUtils;
 import jakarta.annotation.Resource;
-import org.springframework.beans.BeanUtils;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional(rollbackFor = Exception.class)
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
     public static final Pattern userIdPattern = Pattern.compile("^[1-9]\\d*$");
     public static final Pattern usernamePattern = Pattern.compile("^[a-zA-Z0-9_-]{4,16}$");
@@ -43,46 +47,61 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     private RedisProvider redisProvider;
 
     @Override
+    public UserVo register(UserRegisterDto registerDto) {
+        return create(new UserCreateDto(registerDto.getUsername(), null, registerDto.getPassword(), registerDto.getEmail(), null, null, null));
+    }
+
+    @Override
     public UserVo create(UserCreateDto userCreateDto) {
-        if (checkUserExist(userCreateDto.getId(), userCreateDto.getUsername(), userCreateDto.getEmail())) {
-            throw new RuntimeException("用户已存在");
+        // 检查用户是否已存在
+        if (checkUserExist(null, userCreateDto.getUsername(), userCreateDto.getEmail())) {
+            throw new HttpRequestException(ErrorResult.USER_ALREADY_EXIST);
         }
+
         User user = new User();
-        BeanUtils.copyProperties(userCreateDto, user);
+        BeanUtils.copyPropertiesIgnoreMissing(userCreateDto, user);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setStatus(UserStatus.VERIFYING);
-        user.setUpdateTime(System.currentTimeMillis());
-        user.setCreateTime(System.currentTimeMillis());
-        int inserted = userMapper.insert(user);
-        if (inserted > 0) {
-            UserVo userVo = new UserVo();
-            BeanUtils.copyProperties(user, userVo);
-            return userVo;
-        } else {
-            throw new RuntimeException("用户创建失败");
+        user.setUpdateTime(LocalDateTime.now());
+        user.setCreateTime(LocalDateTime.now());
+        // user.setIsDeleted(0);
+
+        try {
+            // 尝试插入用户
+            int inserted = userMapper.insert(user);
+            if (inserted > 0) {
+                // 直接使用已回填ID的user对象，无需再次查询
+                UserVo userVo = new UserVo();
+                BeanUtils.copyPropertiesIgnoreMissing(user, userVo);
+                return userVo;
+            } else {
+                throw new HttpRequestException(ErrorResult.USER_CREATE_FAILED);
+            }
+        } catch (DuplicateKeyException e) {
+            // 处理并发情况下可能出现的唯一键冲突
+            throw new HttpRequestException(ErrorResult.USER_ALREADY_EXIST);
         }
     }
 
     private boolean checkUserExist(Long id, String username, String email) {
+        // 同时检查用户名和邮箱
         LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
-        boolean hasCondition = false;
 
-        if (id != null) {
-            queryWrapper.eq(User::getId, id);
-            hasCondition = true;
-        }
         if (username != null) {
-            queryWrapper.or().eq(User::getUsername, username);
-            hasCondition = true;
+            queryWrapper.eq(User::getUsername, username).or();
         }
+
         if (email != null) {
-            queryWrapper.or().eq(User::getEmail, email);
-            hasCondition = true;
+            queryWrapper.eq(User::getEmail, email);
         }
 
-        return hasCondition && userMapper.selectCount(queryWrapper) > 0;
-    }
+        // 如果是更新操作，需要排除当前用户
+        if (id != null) {
+            queryWrapper.ne(User::getId, id);
+        }
 
+        return this.count(queryWrapper) > 0;
+    }
 
     @Override
     public Result<UserVo> login(UserLoginDto userLoginDto) {
@@ -106,7 +125,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             throw new HttpRequestException(ErrorResult.PASSWORD_ERROR);
         }
         UserVo userVo = new UserVo();
-        BeanUtils.copyProperties(user, userVo);
+        BeanUtils.copyPropertiesIgnoreMissing(user, userVo);
         String token = "Bearer " + tokenProvider.createToken(Map.of(
                 "id", user.getId(),
                 "username", user.getUsername(),
@@ -136,7 +155,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             queryWrapper.eq(User::getStatus, searchDto.getStatus());
         }
         if (searchDto.getRoleId() != null) {
-            queryWrapper.eq(User::getRole, searchDto.getRoleId());
+            queryWrapper.eq(User::getRoleId, searchDto.getRoleId());
         }
         Page<User> page = this.page(userPage, queryWrapper);
         List<UserVo> userVos = page.getRecords().stream()
@@ -152,7 +171,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     private UserVo convertToVo(User user) {
         UserVo userVo = new UserVo();
-        BeanUtils.copyProperties(user, userVo);
+        BeanUtils.copyPropertiesIgnoreMissing(user, userVo);
         return userVo;
     }
 
@@ -168,8 +187,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         if (this.count(queryWrapper) > 0) {
             throw new HttpRequestException(ErrorResult.USERNAME_ALREADY_EXIST);
         }
-
-        BeanUtils.copyProperties(updateDto, user);
+        user.setUpdateTime(LocalDateTime.now());
+        BeanUtils.copyPropertiesIgnoreMissing(updateDto, user);
         this.updateById(user);
         return convertToVo(user);
     }
