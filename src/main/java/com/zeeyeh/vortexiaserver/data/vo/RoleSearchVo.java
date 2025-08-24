@@ -7,9 +7,8 @@ import java.util.List;
 
 @Data
 @AllArgsConstructor
-public class UserSearchVo {
-
-    private List<UserVo> content;
+public class RoleSearchVo {
+    private List<RoleVo> content;
     private Long total;
     private Integer number;
     private Integer size;

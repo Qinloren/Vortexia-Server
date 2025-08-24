@@ -13,6 +13,9 @@ public enum ErrorResult {
     PASSWORD_ERROR(1004, "密码错误"),
     USER_ALREADY_EXIST(1005, "用户已存在"),
     USER_CREATE_FAILED(1006, "用户创建失败"),
+    ROLE_ALREADY_EXIST(1100, "角色已存在"),
+    ROLE_NOT_FOUND(1101, "角色不存在"),
+    ROLE_CREATE_FAILED(1102, "角色创建失败"),
     ;
     private final int code;
     private final String message;
