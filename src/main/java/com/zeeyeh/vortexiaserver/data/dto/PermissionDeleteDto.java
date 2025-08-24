@@ -7,9 +7,6 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class RoleUpdateDto {
+public class PermissionDeleteDto {
     private Long id;
-    private String name;
-    private String displayName;
-    private String description;
 }

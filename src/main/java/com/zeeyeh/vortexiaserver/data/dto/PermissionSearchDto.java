@@ -7,9 +7,10 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class RoleUpdateDto {
-    private Long id;
+public class PermissionSearchDto {
     private String name;
-    private String displayName;
     private String description;
+    private String group;
+    private Integer page;
+    private Integer size;
 }
