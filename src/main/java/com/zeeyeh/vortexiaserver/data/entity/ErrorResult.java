@@ -19,6 +19,9 @@ public enum ErrorResult {
     PERMISSION_ALREADY_EXIST(1200, "权限已存在"),
     PERMISSION_NOT_FOUND(1201, "权限不存在"),
     PERMISSION_CREATE_FAILED(1202, "权限创建失败"),
+    ROLE_PERMISSION_ALREADY_EXIST(1300, "角色权限已存在"),
+    ROLE_PERMISSION_NOT_FOUND(1301, "角色权限不存在"),
+    ROLE_PERMISSION_CREATE_FAILED(1302, "角色权限创建失败"),
     ;
     private final int code;
     private final String message;
