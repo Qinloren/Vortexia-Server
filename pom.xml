@@ -12,6 +12,7 @@
     <modules>
         <module>vta-common</module>
         <module>vta-api</module>
+        <module>vta-gateway</module>
     </modules>
 
     <properties>
