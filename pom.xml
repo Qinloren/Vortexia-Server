@@ -11,6 +11,7 @@
     <name>Vortexia</name>
     <modules>
         <module>vta-common</module>
+        <module>vta-api</module>
     </modules>
 
     <properties>
