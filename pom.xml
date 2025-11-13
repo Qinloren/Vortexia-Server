@@ -15,6 +15,7 @@
         <module>vta-gateway</module>
         <module>vta-auth</module>
         <module>vta-user</module>
+        <module>vta-content</module>
     </modules>
 
     <properties>
