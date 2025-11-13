@@ -19,6 +19,7 @@
         <module>vta-interaction</module>
         <module>vta-admin</module>
         <module>vta-file</module>
+        <module>vta-task</module>
     </modules>
 
     <properties>
