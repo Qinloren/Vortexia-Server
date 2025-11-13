@@ -20,6 +20,7 @@
         <module>vta-admin</module>
         <module>vta-file</module>
         <module>vta-task</module>
+        <module>vta-monitor</module>
     </modules>
 
     <properties>
