@@ -17,6 +17,7 @@
         <module>vta-user</module>
         <module>vta-content</module>
         <module>vta-interaction</module>
+        <module>vta-admin</module>
     </modules>
 
     <properties>
